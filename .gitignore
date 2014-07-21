@@ -16,6 +16,8 @@
 /eco32/.*project
 /gimmix/.*project
 *.o
+*.i
+*.s
 *.bin
 *.mak
 *.exo
