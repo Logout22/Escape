@@ -25,7 +25,7 @@ class IMMP {
         IMMP(gui::Application *app) : application(app), immp_state(1) {}
         void state_machine();
         // XXX
-        void changeDir(gui::UIElement&) {}
+        void change_dir(gui::UIElement&) {}
 };
 
 // Helper function

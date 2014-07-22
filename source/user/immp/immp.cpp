@@ -61,7 +61,7 @@ void IMMP::create_mainwnd() {
     current_dir = unique_ptr<Directory>(new Directory(status_bar, "/etc"));
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
 
-    go_button->clicked().subscribe(mem_recv(this, &IMMP::changeDir));
+    go_button->clicked().subscribe(mem_recv(this, &IMMP::change_dir));
     main_window->show(true);
 }
 
