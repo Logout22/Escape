@@ -9,10 +9,11 @@
 
 class Directory {
     private:
-        std::file dirhandle;
+        std::unique_ptr<std::file> dirhandle;
         std::vector< std::shared_ptr<ImageFile> > image_files;
         std::shared_ptr<StatusBar> statbar;
     public:
-        Directory(std::shared_ptr<StatusBar> stb, const std::string &path);
+        // XXX
+        Directory(std::shared_ptr<StatusBar> stb, const std::string &path) {}
 };
 

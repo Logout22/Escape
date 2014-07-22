@@ -48,18 +48,20 @@ void IMMP::create_mainwnd() {
 	shared_ptr<Panel> root = main_window->getRootPanel();
 	root->setLayout(make_layout<BorderLayout>());
     canvas = unique_ptr<Canvas>(new Canvas);
-    // XXX root->add(image_panel, BorderLayout::CENTER);
+    root->add(canvas->get_control(), BorderLayout::CENTER);
 
     shared_ptr<Panel> north_border =
         make_control<Panel>(make_layout<FlowLayout>(Align(FRONT), false));
     path_input = make_control<Editable>();
     shared_ptr<Button> go_button = make_control<Button>("Go");
-    // XXX go_button->clicked().subscribe(mem_recv());
     north_border->add(path_input);
+    north_border->add(go_button);
     root->add(north_border, BorderLayout::NORTH);
-    // TODO embed in Border control
-    status_bar = unique_ptr<StatusBar>(new StatusBar);
+    status_bar = shared_ptr<StatusBar>(new StatusBar);
+    current_dir = unique_ptr<Directory>(new Directory(status_bar, "/etc"));
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
+
+    go_button->clicked().subscribe(mem_recv(this, &IMMP::changeDir));
     main_window->show(true);
 }
 

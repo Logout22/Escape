@@ -6,7 +6,7 @@
 
 class ImageFile {
     private:
-        std::shared_ptr<ImageButton> image;
+        std::shared_ptr<gui::ImageButton> image;
         std::string filename;
     public:
         ImageFile(const std::string fname);
