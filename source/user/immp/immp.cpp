@@ -20,6 +20,7 @@
 #include "immp.h"
 #include <gui/image/bitmapimage.h>
 #include <gui/layout/borderlayout.h>
+#include <gui/layout/flowlayout.h>
 #include <gui/imagebutton.h>
 #include <esc/proc.h>
 #include <esc/thread.h>
@@ -46,15 +47,19 @@ void IMMP::create_mainwnd() {
     main_window = make_control<Window>("IMMP", Pos(50, 50));
 	shared_ptr<Panel> root = main_window->getRootPanel();
 	root->setLayout(make_layout<BorderLayout>());
-    image_panel = make_control<Panel>(
-            Pos(0,0), Size(700, 500), make_layout<BorderLayout>());
-    root->add(image_panel, BorderLayout::CENTER);
-    // TODO embed in Border control
+    canvas = unique_ptr<Canvas>(new Canvas);
+    // XXX root->add(image_panel, BorderLayout::CENTER);
+
+    shared_ptr<Panel> north_border =
+        make_control<Panel>(make_layout<FlowLayout>(Align(FRONT), false));
     path_input = make_control<Editable>();
-    root->add(path_input, BorderLayout::NORTH);
+    shared_ptr<Button> go_button = make_control<Button>("Go");
+    // XXX go_button->clicked().subscribe(mem_recv());
+    north_border->add(path_input);
+    root->add(north_border, BorderLayout::NORTH);
     // TODO embed in Border control
-    current_file_label = make_control<Label>("current_file");
-    root->add(current_file_label, BorderLayout::SOUTH);
+    status_bar = unique_ptr<StatusBar>(new StatusBar);
+    root->add(status_bar->get_control(), BorderLayout::SOUTH);
     main_window->show(true);
 }
 

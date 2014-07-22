@@ -3,18 +3,18 @@
 #include <esc/common.h>
 #include <gui/application.h>
 #include <gui/window.h>
-#include <gui/panel.h>
 #include <gui/editable.h>
-#include <gui/label.h>
+#include "canvas.h"
+#include "statusbar.h"
 
 class IMMP {
     private:
         gui::Application *application;
         std::shared_ptr<gui::Window> splash_window;
         std::shared_ptr<gui::Window> main_window;
-        std::shared_ptr<gui::Panel> image_panel;
+        std::unique_ptr<Canvas> canvas;
         std::shared_ptr<gui::Editable> path_input;
-        std::shared_ptr<gui::Label> current_file_label;
+        std::unique_ptr<StatusBar> status_bar;
         uint32_t immp_state;
 
         void create_splash();
