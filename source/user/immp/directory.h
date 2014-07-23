@@ -15,7 +15,6 @@ class Directory {
         std::string current_path;
         size_t current_index;
     public:
-        // XXX
         Directory(std::shared_ptr<StatusBar> stb, const std::string &path)
             : statbar(stb)
         { change_path(path); }

@@ -50,15 +50,18 @@ void IMMP::create_mainwnd() {
     canvas = unique_ptr<Canvas>(new Canvas);
     root->add(canvas->get_control(), BorderLayout::CENTER);
 
+    const string default_path("/etc");
     shared_ptr<Panel> north_border =
-        make_control<Panel>(make_layout<FlowLayout>(Align(FRONT), false));
+        make_control<Panel>(make_layout<FlowLayout>(Align(CENTER), false));
     path_input = make_control<Editable>();
+    path_input->setText(default_path);
     shared_ptr<Button> go_button = make_control<Button>("Go");
     north_border->add(path_input);
     north_border->add(go_button);
     root->add(north_border, BorderLayout::NORTH);
     status_bar = shared_ptr<StatusBar>(new StatusBar);
-    current_dir = unique_ptr<Directory>(new Directory(status_bar, "/etc"));
+    current_dir =
+        unique_ptr<Directory>(new Directory(status_bar, default_path));
     update_canvas();
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
 
@@ -71,11 +74,12 @@ void IMMP::state_machine() {
         switch (immp_state) {
             case 1:
                 // Initialisation
+                /*
                 create_splash();
                 application->addWindow(splash_window);
                 sleep(2000);
                 application->removeWindow(splash_window);
-                splash_window.reset();
+                splash_window.reset();*/
                 create_mainwnd();
                 application->addWindow(main_window);
                 // XXX should run event-driven from here
