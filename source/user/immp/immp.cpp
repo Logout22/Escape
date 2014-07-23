@@ -59,6 +59,7 @@ void IMMP::create_mainwnd() {
     root->add(north_border, BorderLayout::NORTH);
     status_bar = shared_ptr<StatusBar>(new StatusBar);
     current_dir = unique_ptr<Directory>(new Directory(status_bar, "/etc"));
+    update_canvas();
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
 
     go_button->clicked().subscribe(mem_recv(this, &IMMP::change_dir));

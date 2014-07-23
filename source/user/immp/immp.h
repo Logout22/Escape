@@ -21,6 +21,8 @@ class IMMP {
 
         void create_splash();
         void create_mainwnd();
+        void update_canvas()
+        { canvas->set_button(current_dir->get_current_image()->get_image()); }
     public:
         IMMP(gui::Application *app) : application(app), immp_state(1) {}
         void state_machine();

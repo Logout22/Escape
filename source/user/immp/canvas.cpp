@@ -9,3 +9,12 @@ Canvas::Canvas() {
             make_layout<BorderLayout>());
 }
 
+void Canvas::set_button(std::shared_ptr<gui::ImageButton> newimg) {
+    if (current_button) {
+        panel->remove(current_button);
+        current_button.reset();
+    }
+    current_button = newimg;
+    panel->add(current_button, BorderLayout::CENTER);
+}
+

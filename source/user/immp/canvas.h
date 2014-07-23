@@ -12,5 +12,6 @@ class Canvas {
     public:
         Canvas();
         std::shared_ptr<gui::Panel> get_control() { return panel; }
+        void set_button(std::shared_ptr<gui::ImageButton> newimg);
 };
 

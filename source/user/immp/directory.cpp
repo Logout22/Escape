@@ -19,3 +19,8 @@ bool Directory::change_path(const std::string &path) {
     return true;
 }
 
+bool Directory::select_image(size_t new_index) {
+    // update status bar
+    return true;
+}
+
