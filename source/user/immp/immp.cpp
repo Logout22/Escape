@@ -54,19 +54,28 @@ void IMMP::create_mainwnd() {
     shared_ptr<Panel> north_border =
         make_control<Panel>(make_layout<FlowLayout>(Align(CENTER), false));
     path_input = make_control<Editable>();
-    path_input->setText(default_path);
     shared_ptr<Button> go_button = make_control<Button>("Go");
     north_border->add(path_input);
     north_border->add(go_button);
     root->add(north_border, BorderLayout::NORTH);
+
     status_bar = shared_ptr<StatusBar>(new StatusBar);
+    root->add(status_bar->get_control(), BorderLayout::SOUTH);
+
     current_dir =
         unique_ptr<Directory>(new Directory(status_bar, default_path));
     update_canvas();
-    root->add(status_bar->get_control(), BorderLayout::SOUTH);
 
     go_button->clicked().subscribe(mem_recv(this, &IMMP::change_dir));
     main_window->show(true);
+    path_input->setText(default_path);
+}
+
+void IMMP::update_canvas() {
+    auto curimg = current_dir->get_current_image();
+    if (curimg) {
+        canvas->set_button(curimg->get_image());
+    }
 }
 
 void IMMP::state_machine() {
@@ -78,7 +87,6 @@ void IMMP::state_machine() {
                 application->addWindow(splash_window);
                 sleep(2000);
                 application->removeWindow(splash_window);
-                splash_window.reset();
                 create_mainwnd();
                 application->addWindow(main_window);
                 // XXX should run event-driven from here

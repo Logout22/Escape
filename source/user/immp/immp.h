@@ -21,13 +21,12 @@ class IMMP {
 
         void create_splash();
         void create_mainwnd();
-        void update_canvas()
-        { canvas->set_button(current_dir->get_current_image()->get_image()); }
+        void update_canvas();
     public:
         IMMP(gui::Application *app) : application(app), immp_state(1) {}
         void state_machine();
-        // XXX
-        void change_dir(gui::UIElement&) {}
+        void change_dir(gui::UIElement&)
+            { current_dir->change_path(path_input->getText()); }
 };
 
 // Helper function
