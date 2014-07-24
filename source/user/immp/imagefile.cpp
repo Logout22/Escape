@@ -10,7 +10,6 @@ ImageFile::ImageFile(const string &path, const string &fname) {
 }
 
 void ImageFile::load_image() {
-    image = shared_ptr<ImageButton>(new ImageButton(
-                Image::loadImage(image_file_handle->path())));
+    image = sptr<ImageButton>(Image::loadImage(image_file_handle->path()));
 }
 

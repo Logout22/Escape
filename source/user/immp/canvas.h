@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sys/common.h>
+#include "global_defs.h"
 #include <gui/panel.h>
 #include <gui/imagebutton.h>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sys/common.h>
+#include "global_defs.h"
 #include <gui/application.h>
 #include <gui/window.h>
 #include <gui/editable.h>

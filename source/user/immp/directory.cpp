@@ -12,8 +12,7 @@ bool Directory::change_path(const string &path) {
         // by default do not list hidden files:
         // XXX handle all file endings
         for (auto const &dire : new_dir->list_files(false, "*.bmp")) {
-            image_files.push_back(shared_ptr<ImageFile>(
-                        new ImageFile(path, dire.d_name)));
+            image_files.push_back(sptr<ImageFile>(path, dire.d_name));
         }
         dirhandle = unique_ptr<file>(new file(*new_dir));
         if (image_files.size() > 0) {

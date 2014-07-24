@@ -73,7 +73,7 @@ void IMMP::create_mainwnd() {
     east_border->add(next_button);
     root->add(east_border, BorderLayout::EAST);
 
-    status_bar = shared_ptr<StatusBar>(new StatusBar);
+    status_bar = sptr<StatusBar>();
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
 
     current_dir =
