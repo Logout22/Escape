@@ -101,10 +101,12 @@ void IMMP::state_machine() {
         switch (immp_state) {
             case 1:
                 // Initialisation
+#ifndef IMMP_DEBUG
                 create_splash();
                 application->addWindow(splash_window);
                 sleep(2000);
                 application->removeWindow(splash_window);
+#endif
                 create_mainwnd();
                 application->addWindow(main_window);
                 // XXX should run event-driven from here
