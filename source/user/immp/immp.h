@@ -27,6 +27,10 @@ class IMMP {
         void state_machine();
         void change_dir(gui::UIElement&)
         { current_dir->change_path(path_input->getText()); update_canvas(); }
+        void select_prev_image(gui::UIElement&)
+        { current_dir->select_prev(); update_canvas(); }
+        void select_next_image(gui::UIElement&)
+        { current_dir->select_next(); update_canvas(); }
 };
 
 // Helper function

@@ -18,14 +18,15 @@ class Directory {
         std::shared_ptr<StatusBar> statbar;
 
         bool select_image(ImageFileIterator new_image);
+        void load_image(std::shared_ptr<ImageFile> file_to_load);
         void update_statusbar(const std::string &fname);
     public:
         Directory(std::shared_ptr<StatusBar> stb, const std::string &path)
             : statbar(stb)
         { change_path(path); }
         bool change_path(const std::string &path);
-        bool select_prev() { return select_image(current_image - 1); }
-        bool select_next() { return select_image(current_image + 1); }
+        bool select_prev();
+        bool select_next();
         std::shared_ptr<ImageFile> get_current_image();
 };
 

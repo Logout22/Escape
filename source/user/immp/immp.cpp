@@ -45,20 +45,33 @@ void IMMP::create_splash() {
 
 void IMMP::create_mainwnd() {
     main_window = make_control<Window>("IMMP", Pos(50, 50));
-	shared_ptr<Panel> root = main_window->getRootPanel();
+	auto root = main_window->getRootPanel();
 	root->setLayout(make_layout<BorderLayout>());
     canvas = unique_ptr<Canvas>(new Canvas);
     root->add(canvas->get_control(), BorderLayout::CENTER);
 
     const string default_path("/etc");
-    shared_ptr<Panel> north_border =
-        make_control<Panel>(make_layout<FlowLayout>(Align(CENTER), false));
+    auto north_border = make_control<Panel>(
+            make_layout<FlowLayout>(Align(CENTER), false));
     path_input = make_control<Editable>();
     path_input->setText(default_path);
-    shared_ptr<Button> go_button = make_control<Button>("Go");
+    auto go_button = make_control<Button>("Go");
     north_border->add(path_input);
     north_border->add(go_button);
     root->add(north_border, BorderLayout::NORTH);
+
+    auto west_border =
+        make_control<Panel>(make_layout<FlowLayout>(
+                    Align(CENTER), false, Orientation(VERTICAL)));
+    auto prev_button = make_control<Button>("Prev");
+    west_border->add(prev_button);
+    root->add(west_border, BorderLayout::WEST);
+    auto east_border =
+        make_control<Panel>(make_layout<FlowLayout>(
+                    Align(CENTER), false, Orientation(VERTICAL)));
+    auto next_button = make_control<Button>("Next");
+    east_border->add(next_button);
+    root->add(east_border, BorderLayout::EAST);
 
     status_bar = shared_ptr<StatusBar>(new StatusBar);
     root->add(status_bar->get_control(), BorderLayout::SOUTH);
@@ -68,6 +81,8 @@ void IMMP::create_mainwnd() {
     update_canvas();
 
     go_button->clicked().subscribe(mem_recv(this, &IMMP::change_dir));
+    prev_button->clicked().subscribe(mem_recv(this, &IMMP::select_prev_image));
+    next_button->clicked().subscribe(mem_recv(this, &IMMP::select_next_image));
     main_window->show(true);
 }
 
@@ -78,6 +93,7 @@ void IMMP::update_canvas() {
     } else {
         canvas->set_button();
     }
+    main_window->repaint();
 }
 
 void IMMP::state_machine() {

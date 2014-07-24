@@ -18,6 +18,7 @@ void Canvas::set_button(std::shared_ptr<gui::ImageButton> newimg) {
         current_button = newimg;
         panel->add(current_button, BorderLayout::CENTER);
     }
+    panel->layout();
     /* XXX: If no newimg is set,
      * the old button persists until window is resized
      */
