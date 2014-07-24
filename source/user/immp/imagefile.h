@@ -1,14 +1,14 @@
 #pragma once
 
-#include <esc/common.h>
+#include <sys/common.h>
 #include <string>
 #include <gui/imagebutton.h>
-#include <file.h>
+#include <esc/file.h>
 
 class ImageFile {
     private:
         std::shared_ptr<gui::ImageButton> image;
-        std::unique_ptr<std::file> image_file_handle;
+        std::unique_ptr<esc::file> image_file_handle;
     public:
         ImageFile(const std::string &path, const std::string &fname);
         void load_image();

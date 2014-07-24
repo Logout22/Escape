@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace esc;
 
 bool Directory::change_path(const string &path) {
     try {
@@ -10,14 +11,16 @@ bool Directory::change_path(const string &path) {
         image_files.clear();
         // by default do not list hidden files:
         // XXX handle all file endings
-        for (auto const &it : new_dir->list_files(false, "*.bmp")) {
+        for (auto const &dire : new_dir->list_files(false, "*.bmp")) {
             image_files.push_back(shared_ptr<ImageFile>(
-                        new ImageFile(path, it.name)));
+                        new ImageFile(path, dire.d_name)));
         }
         dirhandle = unique_ptr<file>(new file(*new_dir));
         current_image = image_files.end();
         if (image_files.size() > 0) {
             select_image(image_files.begin());
+        } else {
+            update_statusbar("");
         }
     } catch(const default_error& e) {
         cerr << e.what() << endl;
@@ -33,9 +36,13 @@ bool Directory::select_image(ImageFileIterator new_image) {
     }
     (*new_image)->load_image();
     // update status bar
-    statbar->set_filename((*new_image)->get_filename());
+    update_statusbar((*new_image)->get_filename());
     current_image = new_image;
     return true;
+}
+
+void Directory::update_statusbar(const string &fname) {
+    statbar->set_filename(fname);
 }
 
 shared_ptr<ImageFile> Directory::get_current_image() {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <esc/common.h>
+#include <sys/common.h>
 #include <string>
-#include <file.h>
+#include <esc/file.h>
 #include <list>
 #include "imagefile.h"
 #include "statusbar.h"
@@ -12,12 +12,13 @@ typedef ImageFileVector::iterator ImageFileIterator;
 
 class Directory {
     private:
-        std::unique_ptr<std::file> dirhandle;
+        std::unique_ptr<esc::file> dirhandle;
         ImageFileVector image_files;
         ImageFileIterator current_image;
         std::shared_ptr<StatusBar> statbar;
 
         bool select_image(ImageFileIterator new_image);
+        void update_statusbar(const std::string &fname);
     public:
         Directory(std::shared_ptr<StatusBar> stb, const std::string &path)
             : statbar(stb)

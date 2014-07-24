@@ -22,8 +22,8 @@
 #include <gui/layout/borderlayout.h>
 #include <gui/layout/flowlayout.h>
 #include <gui/imagebutton.h>
-#include <esc/proc.h>
-#include <esc/thread.h>
+#include <sys/proc.h>
+#include <sys/thread.h>
 #include <iostream>
 #include <stdlib.h>
 
@@ -54,6 +54,7 @@ void IMMP::create_mainwnd() {
     shared_ptr<Panel> north_border =
         make_control<Panel>(make_layout<FlowLayout>(Align(CENTER), false));
     path_input = make_control<Editable>();
+    path_input->setText(default_path);
     shared_ptr<Button> go_button = make_control<Button>("Go");
     north_border->add(path_input);
     north_border->add(go_button);
@@ -68,7 +69,6 @@ void IMMP::create_mainwnd() {
 
     go_button->clicked().subscribe(mem_recv(this, &IMMP::change_dir));
     main_window->show(true);
-    path_input->setText(default_path);
 }
 
 void IMMP::update_canvas() {
