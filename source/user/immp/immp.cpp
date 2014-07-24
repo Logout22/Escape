@@ -75,6 +75,8 @@ void IMMP::update_canvas() {
     auto curimg = current_dir->get_current_image();
     if (curimg) {
         canvas->set_button(curimg->get_image());
+    } else {
+        canvas->set_button();
     }
 }
 

@@ -16,7 +16,9 @@ bool Directory::change_path(const string &path) {
         }
         dirhandle = unique_ptr<file>(new file(*new_dir));
         current_image = image_files.end();
-        select_image(image_files.begin());
+        if (image_files.size() > 0) {
+            select_image(image_files.begin());
+        }
     } catch(const default_error& e) {
         cerr << e.what() << endl;
         return false;
@@ -37,6 +39,10 @@ bool Directory::select_image(ImageFileIterator new_image) {
 }
 
 shared_ptr<ImageFile> Directory::get_current_image() {
-    return current_image ? (*current_image) : shared_ptr<ImageFile>();
+    if (current_image == image_files.end()) {
+        return shared_ptr<ImageFile>();
+    } else {
+        return *current_image;
+    }
 }
 

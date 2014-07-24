@@ -26,7 +26,7 @@ class IMMP {
         IMMP(gui::Application *app) : application(app), immp_state(1) {}
         void state_machine();
         void change_dir(gui::UIElement&)
-            { current_dir->change_path(path_input->getText()); }
+        { current_dir->change_path(path_input->getText()); update_canvas(); }
 };
 
 // Helper function
