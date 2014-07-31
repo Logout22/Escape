@@ -4,27 +4,28 @@
 #include <string>
 #include <cinttypes>
 #include <cstring>
+#include <cassert>
 
 #include <arpa/inet.h>
 
 using namespace std;
 
 class PNGException : public std::exception {
+    protected:
+        string error;
     public:
+        PNGException() : error("Error loading PNG image: ") {}
         virtual char const *what() const throw();
 };
 
 class PNGCorruptHeaderException : public PNGException {
     public:
-        char const *what() const throw();
+        PNGCorruptHeaderException() { error += "Corrupt header"; }
 };
 
 class PNGCRCMismatchException : public PNGException {
-    private:
-        string blocktype;
     public:
-        PNGCRCMismatchException(string blt) : blocktype(blt) {}
-        char const *what() const throw();
+        PNGCRCMismatchException(uint8_t const blt[4]);
 };
 
 size_t const PNG_HDRLEN = 8;
@@ -67,31 +68,28 @@ uint32_t const PNG_CRC_TABLE[] = {
     0x00000000, 0x8D080DF5, 0xC1611DAB, 0x15DA2D49, 0x59B33D17, 0x67DD4ACC, 0x2BB45A92, 0xFF0F6A70,
 };
 
-
 char const *PNGException::what() const throw() {
-    return "Error loading PNG image: ";
-}
-
-char const *PNGCorruptHeaderException::what() const throw() {
-    string error = PNGException::what();
-    error += "Corrupt header";
     return error.c_str();
 }
 
-char const *PNGCRCMismatchException::what() const throw() {
-    string error = PNGException::what();
-    error += "CRC of block " + blocktype + " wrong; block corrupt";
-    return error.c_str();
+PNGCRCMismatchException::PNGCRCMismatchException(uint8_t const blt[4]) {
+    char blocktype[5] = {0};
+    // for ASCII, it's just a copy operation
+    memcpy(blocktype, blt, 4);
+    error += "CRC of block ";
+    error += blocktype;
+    error += " wrong; block corrupt";
 }
 
 /* adapted from RFC 2083 */
-uint32_t crc(vector<uint8_t> &buf)
+uint32_t crc(uint8_t *buf, size_t buflen)
 {
     uint32_t c = 0xffffffff;
-    for (uint8_t elem : buf) {
-        c = PNG_CRC_TABLE[(c ^ elem) & 0xff] ^ (c >> 8);
+    for (unsigned i = 0; i < buflen; i++) {
+        c = PNG_CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >> 8);
     }
     c ^= 0xffffffff;
+    cerr << "crc: " << hex << c << endl;
     return c;
 }
 
@@ -112,21 +110,26 @@ int main(int argc, char *argv[]) {
             png_file.read((char*) &chunklen_net, 4);
             uint32_t chunk_len = ntohl(chunklen_net);
 
-            char chunk_type[4];
-            png_file.read(chunk_type, 4);
+            size_t const tc_len = 4 + chunk_len;
+            uint8_t to_check[tc_len];
+            png_file.read((char*) to_check, tc_len);
 
-            vector<uint8_t> chunk_data(chunk_len);
-            png_file.read((char*) &chunk_data[0], chunk_len);
+            // now extract the two fields and check for correct CRC
+            uint8_t chunk_type[4];
+            memcpy(chunk_type, to_check, 4);
+            uint8_t *chunk_data = to_check + 4;
 
             uint32_t chunkcrc_net;
             png_file.read((char*) &chunkcrc_net, 4);
             uint32_t chunk_crc = ntohl(chunkcrc_net);
-            if (chunk_crc != crc(chunk_data)) {
+            cerr << "chunk crc: " << hex << chunk_crc << endl;
+
+            if (chunk_crc != crc(to_check, tc_len)) {
                 throw PNGCRCMismatchException(chunk_type);
             }
         }
     } catch(const exception &e) {
-        cout << "Exception: " << e.what() << endl;
+        cerr << "Exception: " << e.what() << endl;
     }
 }
 
