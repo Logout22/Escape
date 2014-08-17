@@ -25,7 +25,7 @@ void print_crc_table() {
     for (i = 0; i < 32; i++) {
         printf("    ");
         for (j = 0; j < 8; j++) {
-            printf("0x%08X,", crc_table[i * j]);
+            printf("0x%08X,", crc_table[i * 8 + j]);
             if (j != 15) printf(" ");
         }
         printf("\n");
